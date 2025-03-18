@@ -2,4 +2,4 @@
 Dependancies:
 opencv: pip install opencv-python
 googlemaps api: pip install googlemaps
-Serial: 
+Serial: pip install pyserial

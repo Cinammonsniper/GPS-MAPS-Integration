@@ -3,8 +3,7 @@ from PIL import Image, ImageTk
 from MapsAPI import MapFetcher
 from ArduinoInterface import SerialRead
 
-
-
+#TODO move this function to MapsAPI script
 def ddm_to_dd(ddm, is_longitude=False):
     # Longitude has 3-degree digits, Latitude has 2
     degree_digits = 3 if is_longitude else 2
@@ -15,7 +14,7 @@ def ddm_to_dd(ddm, is_longitude=False):
     return degrees + (minutes / 60)
 
 
-
+#TODO add zoom and map size functionality 
 
 class Gui:
     def __init__(self):

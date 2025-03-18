@@ -2,6 +2,9 @@ import serial
 import threading
 
 
+#TODO import the coordinate format correcting function to this script
+
+
 def seperate_data(data: str):
     key = []
     value = []

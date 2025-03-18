@@ -1,8 +1,9 @@
 import googlemaps
 import cv2
+from APIKey import APIKey as KEY
 
 
-API_KEY = "AIzaSyBHk1MDXJ5XFSPbmzLlwH4P1DP_3bs5Ik4"
+API_KEY = KEY.return_key() #Add your api key here as a string
 
 
 class MapFetcher:
@@ -49,5 +50,6 @@ class MapFetcher:
     def update_coordinates(self, coordinates: tuple[int]):
         self.coordinates = coordinates
         self.get_image()
+        #TODO add the coordiante difference checker to minimize api calls
 
 
