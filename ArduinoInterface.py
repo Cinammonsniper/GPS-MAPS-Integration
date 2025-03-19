@@ -2,8 +2,12 @@ import serial
 import threading
 
 
-#TODO import the coordinate format correcting function to this script
 
+def ddm_to_dd(ddm, is_longitude=False):
+    degree_digits = 3 if is_longitude else 2
+    degrees = int(ddm[:degree_digits])  
+    minutes = float(ddm[degree_digits:])  
+    return degrees + (minutes / 60)
 
 def seperate_data(data: str):
     key = []
@@ -20,8 +24,16 @@ def seperate_data(data: str):
     try:
         value = float("".join(value).replace(" ", ""))
     except ValueError:
+        direction = value[-1]
         value[-1] = " "
         value = "".join(value).replace(" ", "")
+        if key == "Longitude":
+            value = ddm_to_dd(value, True)
+            value = -value if direction == "W" else value
+        elif key == "Latitude":
+            value = ddm_to_dd(value, False)
+            value = -value if direction == "S" else value
+
     return key, value
             
         
@@ -55,6 +67,7 @@ class SerialRead:
         finally:
             self.link.close()
             print("Connection Closed!")
+
 
 
 
