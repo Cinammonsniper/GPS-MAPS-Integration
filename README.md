@@ -28,7 +28,7 @@ pip install tkintermapview pyserial customtkinter
    - **GND** → GND
    - **TX** → Arduino RX (Pin 4 or SoftwareSerial RX)
    - **RX** → Arduino TX (Pin 3 or SoftwareSerial TX)
-2. Upload the provided Arduino sketch (`arduino_gps.ino`) to your Arduino.
+2. Upload the provided Arduino sketch (`GPSReciever.ino`) to your Arduino.
 
 ### 2. Run the Python Application
 1. Connect the Arduino to your PC via USB.
