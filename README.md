@@ -1,5 +1,5 @@
 # GPS-MAPS-Integration
 Dependancies:
 opencv: pip install opencv-python
-googlemaps api: pip install googlemaps
+tkintermapview: pip install tkintermapview
 Serial: pip install pyserial

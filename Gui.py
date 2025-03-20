@@ -1,47 +1,50 @@
 import tkinter as tk
 import customtkinter
 from PIL import Image, ImageTk
-from MapsAPI import MapFetcher
 from ArduinoInterface import SerialRead
+import tkintermapview
 
 
 
 
 class Gui:
     def __init__(self):
-        self.maps = MapFetcher(20, (24.840084,67.004673))
         self.arduino_data = SerialRead("/dev/ttyUSB0", 9600)
         customtkinter.set_appearance_mode("light")
+        self.follow = True
 
     def update_image(self):
         if self.arduino_data.data_dictionary:
-            coordinates= (self.arduino_data.data_dictionary["Latitude"], self.arduino_data.data_dictionary["Longitude"])
-            self.maps.update_coordinates(coordinates)
-        self.display_image()
+            if self.follow:
+                self.map_widget.set_position(self.arduino_data.data_dictionary["Latitude"], self.arduino_data.data_dictionary["Longitude"])
+            self.my_pos.set_position(self.arduino_data.data_dictionary["Latitude"], self.arduino_data.data_dictionary["Longitude"])
         self.root.after(1, self.update_image)
 
-    def display_image(self):
-        image_path = "display_image.png"
-        img = Image.open(image_path)
-        img = img.resize((600, 600), Image.Resampling.LANCZOS)
-        self.img_tk = customtkinter.CTkImage(light_image=img,
-                                  dark_image=img,
-                                  size=(600, 600))
-        self.image_label.configure(image=self.img_tk)
-
-    def zoom(self, value):
-        self.maps.change_parameters(int(value))
+    def change_value(self):
+        if self.follow:
+            self.switch.configure(text="OFF")
+            self.follow = False
+        else:
+            self.switch.configure(text="ON")
+            self.follow = True
 
     def main(self):
         self.root = customtkinter.CTk()
-        self.root.geometry("600x700")
+        self.root.geometry("650x500")
+        self.r_font = customtkinter.CTkFont(family="Roboto", size=27)
+        self.r_font_2 = customtkinter.CTkFont(family="Roboto", size=20)
         self.root.title("GPS-MAP-INTEGRATION")
-        self.slider = customtkinter.CTkSlider(self.root, from_=0, to=30, number_of_steps=30, width=400, height=20, command=self.zoom)
-        self.image_label = customtkinter.CTkLabel(self.root)
+        self.root.resizable(False, False)
+        self.map_widget = tkintermapview.TkinterMapView(self.root, width=500, height=600, corner_radius=0)
+        self.my_pos = self.map_widget.set_marker(0, 0,text="My Position")
+        self.lock_text = customtkinter.CTkLabel(self.root, text="Follow", width=150, font=self.r_font)
+        self.switch = customtkinter.CTkSwitch(self.root, text="ON", command=self.change_value,
+                                onvalue=True, offvalue=False, width=50, height=50, switch_width=50, switch_height=25, font=self.r_font_2)
+        self.switch.select()
+        self.map_widget.grid(row=0, column=0, rowspan=4)
+        self.lock_text.grid(row=0, column=1)
+        self.switch.grid(row=1, column=1, sticky="n")
         self.update_image()
-        self.display_image()
-        self.image_label.grid(column=0, row=0)
-        self.slider.grid(column=0, row=1, pady=35)
 
         self.root.mainloop()
 
